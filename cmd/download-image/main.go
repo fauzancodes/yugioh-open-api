@@ -1,16 +1,14 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"strings"
 	"time"
 
-	"github.com/fauzancodes/yugioh-open-api/app/dto"
+	"github.com/fauzancodes/yugioh-open-api/app/utils"
 )
 
 // DownloadImage downloads an image from the given URL and saves it to the specified filepath
@@ -66,18 +64,10 @@ func DownloadImagesWithRateLimit(urls []string, rateLimit int) {
 }
 
 func main() {
-	// Load JSON data
-	jsonFile, err := os.Open("cardinfo.json")
+	cards, err := utils.LoadJSON()
 	if err != nil {
-		log.Fatalf("Failed to open JSON file: %v", err)
+		return
 	}
-	defer jsonFile.Close()
-
-	byteValue, _ := io.ReadAll(jsonFile)
-	var data dto.Data
-	json.Unmarshal(byteValue, &data)
-
-	cards := data.Data
 
 	// List of URLs to download
 	var urls []string

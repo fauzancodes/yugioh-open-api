@@ -1,30 +1,19 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"log"
-	"os"
 	"strings"
 
-	"github.com/fauzancodes/yugioh-open-api/app/dto"
+	"github.com/fauzancodes/yugioh-open-api/app/utils"
 	"github.com/xuri/excelize/v2"
 )
 
 func main() {
-	// Load JSON data
-	jsonFile, err := os.Open("cardinfo.json")
+	cards, err := utils.LoadJSON()
 	if err != nil {
-		log.Fatalf("Failed to open JSON file: %v", err)
+		return
 	}
-	defer jsonFile.Close()
-
-	byteValue, _ := io.ReadAll(jsonFile)
-	var data dto.Data
-	json.Unmarshal(byteValue, &data)
-
-	cards := data.Data
 
 	// Create a new Excel file
 	f := excelize.NewFile()
@@ -70,7 +59,7 @@ func main() {
 	}
 
 	// Save the Excel file
-	if err := f.SaveAs("output.xlsx"); err != nil {
+	if err := f.SaveAs("data/output.xlsx"); err != nil {
 		log.Fatalf("Failed to save Excel file: %v", err)
 	}
 
