@@ -28,3 +28,8 @@ type CardSet struct {
 type Image struct {
 	ImageURL string `json:"image_url"`
 }
+
+type CardImage struct {
+	ID  string `json:"id"`
+	Url string `json:"url"`
+}

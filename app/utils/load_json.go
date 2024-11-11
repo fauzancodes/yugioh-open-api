@@ -9,7 +9,7 @@ import (
 	"github.com/fauzancodes/yugioh-open-api/app/dto"
 )
 
-func LoadJSON() (cards []dto.Card, err error) {
+func LoadCardJSON() (cards []dto.Card, err error) {
 	jsonFile, err := os.Open("data/cardinfo.json")
 	if err != nil {
 		log.Fatalf("Failed to open JSON file: %v", err)
@@ -23,6 +23,21 @@ func LoadJSON() (cards []dto.Card, err error) {
 	json.Unmarshal(byteValue, &data)
 
 	cards = data.Data
+
+	return
+}
+
+func LoadCloudinaryUrlJSON() (images []dto.CardImage, err error) {
+	jsonFile, err := os.Open("data/cloudinary_urls.json")
+	if err != nil {
+		log.Fatalf("Failed to open JSON file: %v", err)
+
+		return
+	}
+	defer jsonFile.Close()
+
+	byteValue, _ := io.ReadAll(jsonFile)
+	json.Unmarshal(byteValue, &images)
 
 	return
 }

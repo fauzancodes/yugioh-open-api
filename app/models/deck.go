@@ -32,6 +32,7 @@ type DeckRelation struct {
 	TotalSpellCard     uint      `json:"total_spell_card" gorm:"type:int8;column:total_spell_card"`
 	TotalTrapCard      uint      `json:"total_monster_trap_card" gorm:"type:int8;column:total_monster_trap_card"`
 	Cards              []YOACard `json:"cards" gorm:"many2many:yoa_deck_cards"`
+	UserID             uint      `json:"-" gorm:"column:user_id"`
 }
 
 func (DeckRelation) TableName() string {

@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	cards, err := utils.LoadJSON()
+	cards, err := utils.LoadCardJSON()
 	if err != nil {
 		return
 	}

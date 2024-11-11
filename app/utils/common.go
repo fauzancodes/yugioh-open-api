@@ -3,6 +3,10 @@ package utils
 import (
 	"fmt"
 	"net/http"
+	"strings"
+
+	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 )
 
 func CheckURLStatus(url string) bool {
@@ -15,4 +19,24 @@ func CheckURLStatus(url string) bool {
 
 	// Cek status kode apakah 200
 	return resp.StatusCode == http.StatusOK
+}
+
+func BuildPreload(db *gorm.DB, fields []string) *gorm.DB {
+	if len(fields) > 0 {
+		for _, field := range fields {
+			db = db.Preload(field)
+		}
+	}
+
+	return db
+}
+
+func GetBuildPreloadFields(c echo.Context) (fields []string) {
+	raw := c.QueryParam("preload_fields")
+
+	if raw != "" {
+		fields = strings.Split(raw, ",")
+	}
+
+	return
 }

@@ -64,7 +64,7 @@ func DownloadImagesWithRateLimit(urls []string, rateLimit int) {
 }
 
 func main() {
-	cards, err := utils.LoadJSON()
+	cards, err := utils.LoadCardJSON()
 	if err != nil {
 		return
 	}
