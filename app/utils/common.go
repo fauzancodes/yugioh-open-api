@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
@@ -39,4 +40,10 @@ func GetBuildPreloadFields(c echo.Context) (fields []string) {
 	}
 
 	return
+}
+
+func GetCurrentUserID(c echo.Context) uint {
+	userID := c.Get("currentUser").(jwt.MapClaims)["id"].(float64)
+
+	return uint(userID)
 }

@@ -36,7 +36,7 @@ func Database() *gorm.DB {
 
 func RunAutoMigration() {
 	err := DB.AutoMigrate(
-		&models.YOAUsedApiKey{},
+		// &models.YOAUsedApiKey{},
 		&models.YOACard{},
 		&models.YOADeck{},
 		&models.YOAUser{},
