@@ -47,3 +47,17 @@ func GetCurrentUserID(c echo.Context) uint {
 
 	return uint(userID)
 }
+
+func RemoveDuplicatesFromStringArray(strings []string) []string {
+	uniqueMap := make(map[string]bool)
+	var result []string
+
+	for _, str := range strings {
+		if !uniqueMap[str] {
+			uniqueMap[str] = true
+			result = append(result, str)
+		}
+	}
+
+	return result
+}

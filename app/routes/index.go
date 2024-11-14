@@ -14,5 +14,6 @@ func Route(app *echo.Echo) {
 	api := app.Group("/v1", middlewares.StripHTMLMiddleware)
 	{
 		AuthRoute(api)
+		CardRoute(api)
 	}
 }

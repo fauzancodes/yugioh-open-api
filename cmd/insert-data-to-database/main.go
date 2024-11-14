@@ -33,7 +33,7 @@ func main() {
 }
 
 func InsertToDatabase(card dto.Card, images []dto.CardImage, counter int) {
-	check, _ := repository.GetCardByID(uint(card.ID), []string{})
+	check, _ := repository.GetCardByID(uint(card.ID))
 	if check.ID == 0 {
 		var selectedImageurl string
 		for _, image := range images {

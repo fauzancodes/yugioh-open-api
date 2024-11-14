@@ -6,8 +6,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func AuthRoute(app *echo.Group) {
-	auth := app.Group("/auth")
+func AuthRoute(api *echo.Group) {
+	auth := api.Group("/auth")
 	{
 		auth.POST("/register", controllers.Register)
 		auth.POST("/login", controllers.Login)
