@@ -15,5 +15,6 @@ func Route(app *echo.Echo) {
 	{
 		AuthRoute(api)
 		CardRoute(api)
+		DeckRoute(api)
 	}
 }

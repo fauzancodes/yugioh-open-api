@@ -61,3 +61,20 @@ func RemoveDuplicatesFromStringArray(strings []string) []string {
 
 	return result
 }
+
+func GetDuplicatesMoreThanThree(nums []uint) []uint {
+	freqMap := make(map[uint]int)
+	duplicates := []uint{}
+
+	for _, num := range nums {
+		freqMap[num]++
+	}
+
+	for num, count := range freqMap {
+		if count > 3 {
+			duplicates = append(duplicates, num)
+		}
+	}
+
+	return duplicates
+}
