@@ -10,7 +10,7 @@ func Route(app *echo.Echo) {
 	app.Static("/assets", "assets")
 	app.Static("/docs", "docs")
 
-	app.GET("/", controllers.Index, middlewares.StripHTMLMiddleware, middlewares.CheckAPIKey)
+	app.GET("/", controllers.Index, middlewares.StripHTMLMiddleware)
 	api := app.Group("/v1", middlewares.StripHTMLMiddleware)
 	{
 		AuthRoute(api)
