@@ -6,19 +6,19 @@ import (
 	"github.com/fauzancodes/yugioh-open-api/app/models"
 )
 
-func CreateMainDeckCard(data models.YOAMainDeckCard) (models.YOAMainDeckCard, error) {
+func CreateMainDeck(data models.YOAMainDeck) (models.YOAMainDeck, error) {
 	err := config.DB.Create(&data).Error
 
 	return data, err
 }
 
-func GetMainDeckCardByID(id uint) (response models.YOAMainDeckCard, err error) {
+func GetMainDeckByID(id uint) (response models.YOAMainDeck, err error) {
 	err = config.DB.Where("id = ?", id).First(&response).Error
 
 	return
 }
 
-func GetMainDeckCards(param dto.FindParameter) (responses []models.YOAMainDeckCard, total int64, totalFiltered int64, err error) {
+func GetMainDecks(param dto.FindParameter) (responses []models.YOAMainDeck, total int64, totalFiltered int64, err error) {
 	err = config.DB.Model(responses).Where(param.BaseFilter, param.BaseFilterValues...).Count(&total).Error
 	if err != nil {
 		return
@@ -38,31 +38,31 @@ func GetMainDeckCards(param dto.FindParameter) (responses []models.YOAMainDeckCa
 	return
 }
 
-func UpdateMainDeckCard(data models.YOAMainDeckCard) (models.YOAMainDeckCard, error) {
+func UpdateMainDeck(data models.YOAMainDeck) (models.YOAMainDeck, error) {
 	err := config.DB.Save(&data).Error
 
 	return data, err
 }
 
-func DeleteMainDeckCard(data models.YOAMainDeckCard) error {
+func DeleteMainDeck(data models.YOAMainDeck) error {
 	err := config.DB.Delete(&data).Error
 
 	return err
 }
 
-func CreateExtraDeckCard(data models.YOAExtraDeckCard) (models.YOAExtraDeckCard, error) {
+func CreateExtraDeck(data models.YOAExtraDeck) (models.YOAExtraDeck, error) {
 	err := config.DB.Create(&data).Error
 
 	return data, err
 }
 
-func GetExtraDeckCardByID(id uint) (response models.YOAExtraDeckCard, err error) {
+func GetExtraDeckByID(id uint) (response models.YOAExtraDeck, err error) {
 	err = config.DB.Where("id = ?", id).First(&response).Error
 
 	return
 }
 
-func GetExtraDeckCards(param dto.FindParameter) (responses []models.YOAExtraDeckCard, total int64, totalFiltered int64, err error) {
+func GetExtraDecks(param dto.FindParameter) (responses []models.YOAExtraDeck, total int64, totalFiltered int64, err error) {
 	err = config.DB.Model(responses).Where(param.BaseFilter, param.BaseFilterValues...).Count(&total).Error
 	if err != nil {
 		return
@@ -82,31 +82,31 @@ func GetExtraDeckCards(param dto.FindParameter) (responses []models.YOAExtraDeck
 	return
 }
 
-func UpdateExtraDeckCard(data models.YOAExtraDeckCard) (models.YOAExtraDeckCard, error) {
+func UpdateExtraDeck(data models.YOAExtraDeck) (models.YOAExtraDeck, error) {
 	err := config.DB.Save(&data).Error
 
 	return data, err
 }
 
-func DeleteExtraDeckCard(data models.YOAExtraDeckCard) error {
+func DeleteExtraDeck(data models.YOAExtraDeck) error {
 	err := config.DB.Delete(&data).Error
 
 	return err
 }
 
-func CreateSideDeckCard(data models.YOASideDeckCard) (models.YOASideDeckCard, error) {
+func CreateSideDeck(data models.YOASideDeck) (models.YOASideDeck, error) {
 	err := config.DB.Create(&data).Error
 
 	return data, err
 }
 
-func GetSideDeckCardByID(id uint) (response models.YOASideDeckCard, err error) {
+func GetSideDeckByID(id uint) (response models.YOASideDeck, err error) {
 	err = config.DB.Where("id = ?", id).First(&response).Error
 
 	return
 }
 
-func GetSideDeckCards(param dto.FindParameter) (responses []models.YOASideDeckCard, total int64, totalFiltered int64, err error) {
+func GetSideDecks(param dto.FindParameter) (responses []models.YOASideDeck, total int64, totalFiltered int64, err error) {
 	err = config.DB.Model(responses).Where(param.BaseFilter, param.BaseFilterValues...).Count(&total).Error
 	if err != nil {
 		return
@@ -126,13 +126,13 @@ func GetSideDeckCards(param dto.FindParameter) (responses []models.YOASideDeckCa
 	return
 }
 
-func UpdateSideDeckCard(data models.YOASideDeckCard) (models.YOASideDeckCard, error) {
+func UpdateSideDeck(data models.YOASideDeck) (models.YOASideDeck, error) {
 	err := config.DB.Save(&data).Error
 
 	return data, err
 }
 
-func DeleteSideDeckCard(data models.YOASideDeckCard) error {
+func DeleteSideDeck(data models.YOASideDeck) error {
 	err := config.DB.Delete(&data).Error
 
 	return err

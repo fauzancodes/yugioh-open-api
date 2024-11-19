@@ -14,6 +14,6 @@ func AuthRoute(api *echo.Group) {
 		auth.GET("/user", controllers.GetCurrentUser, middlewares.CheckAPIKey, middlewares.Auth)
 		auth.PATCH("/update-profile", controllers.UpdateProfile, middlewares.CheckAPIKey, middlewares.Auth)
 		auth.DELETE("/remove-account", controllers.RemoveAccount, middlewares.CheckAPIKey, middlewares.Auth)
-		auth.POST("/generate-api-key", controllers.GenerateApiKey, middlewares.CheckAPIKey, middlewares.Auth)
+		auth.POST("/generate-api-key", controllers.GenerateApiKey, middlewares.Auth)
 	}
 }

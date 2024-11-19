@@ -42,12 +42,12 @@ func CreateDeck(userID uint, request dto.DeckRequest) (response models.YOADeck, 
 		return
 	}
 
-	mainDeckChan := make([]chan models.YOAMainDeckCard, len(mainDeckCards))
+	mainDeckChan := make([]chan models.YOAMainDeck, len(mainDeckCards))
 	mainDeckErrChan := make([]chan error, len(mainDeckCards))
 	for i, item := range mainDeckCards {
-		mainDeckChan[i] = make(chan models.YOAMainDeckCard)
+		mainDeckChan[i] = make(chan models.YOAMainDeck)
 		mainDeckErrChan[i] = make(chan error)
-		go CreateMainDeckCard(models.YOAMainDeckCard{
+		go CreateMainDeckCard(models.YOAMainDeck{
 			DeckID: response.ID,
 			CardID: item.ID,
 		}, mainDeckChan[i], mainDeckErrChan[i])
@@ -62,16 +62,16 @@ func CreateDeck(userID uint, request dto.DeckRequest) (response models.YOADeck, 
 				return
 			}
 		case mainDeck := <-mainDeckChan[i]:
-			response.MainDeckCards = append(response.MainDeckCards, mainDeck)
+			response.MainDeck = append(response.MainDeck, mainDeck)
 		}
 	}
 
-	extraDeckChan := make([]chan models.YOAExtraDeckCard, len(extraDeckCards))
+	extraDeckChan := make([]chan models.YOAExtraDeck, len(extraDeckCards))
 	extraDeckErrChan := make([]chan error, len(extraDeckCards))
 	for i, item := range extraDeckCards {
-		extraDeckChan[i] = make(chan models.YOAExtraDeckCard)
+		extraDeckChan[i] = make(chan models.YOAExtraDeck)
 		extraDeckErrChan[i] = make(chan error)
-		go CreateExtraDeckCard(models.YOAExtraDeckCard{
+		go CreateExtraDeckCard(models.YOAExtraDeck{
 			DeckID: response.ID,
 			CardID: item.ID,
 		}, extraDeckChan[i], extraDeckErrChan[i])
@@ -86,16 +86,16 @@ func CreateDeck(userID uint, request dto.DeckRequest) (response models.YOADeck, 
 				return
 			}
 		case extraDeck := <-extraDeckChan[i]:
-			response.ExtraDeckCards = append(response.ExtraDeckCards, extraDeck)
+			response.ExtraDeck = append(response.ExtraDeck, extraDeck)
 		}
 	}
 
-	sideDeckChan := make([]chan models.YOASideDeckCard, len(sideDeckCards))
+	sideDeckChan := make([]chan models.YOASideDeck, len(sideDeckCards))
 	sideDeckErrChan := make([]chan error, len(sideDeckCards))
 	for i, item := range sideDeckCards {
-		sideDeckChan[i] = make(chan models.YOASideDeckCard)
+		sideDeckChan[i] = make(chan models.YOASideDeck)
 		sideDeckErrChan[i] = make(chan error)
-		go CreateSideDeckCard(models.YOASideDeckCard{
+		go CreateSideDeckCard(models.YOASideDeck{
 			DeckID: response.ID,
 			CardID: item.ID,
 		}, sideDeckChan[i], sideDeckErrChan[i])
@@ -110,7 +110,7 @@ func CreateDeck(userID uint, request dto.DeckRequest) (response models.YOADeck, 
 				return
 			}
 		case sideDeck := <-sideDeckChan[i]:
-			response.SideDeckCards = append(response.SideDeckCards, sideDeck)
+			response.SideDeck = append(response.SideDeck, sideDeck)
 		}
 	}
 
@@ -118,9 +118,9 @@ func CreateDeck(userID uint, request dto.DeckRequest) (response models.YOADeck, 
 	return
 }
 
-func CreateMainDeckCard(data models.YOAMainDeckCard, result chan models.YOAMainDeckCard, errChan chan error) {
+func CreateMainDeckCard(data models.YOAMainDeck, result chan models.YOAMainDeck, errChan chan error) {
 	var err error
-	data, err = repository.CreateMainDeckCard(data)
+	data, err = repository.CreateMainDeck(data)
 	if err != nil {
 		err = errors.New("failed to create main deck card: " + err.Error())
 		errChan <- err
@@ -130,9 +130,9 @@ func CreateMainDeckCard(data models.YOAMainDeckCard, result chan models.YOAMainD
 	result <- data
 }
 
-func CreateExtraDeckCard(data models.YOAExtraDeckCard, result chan models.YOAExtraDeckCard, errChan chan error) {
+func CreateExtraDeckCard(data models.YOAExtraDeck, result chan models.YOAExtraDeck, errChan chan error) {
 	var err error
-	data, err = repository.CreateExtraDeckCard(data)
+	data, err = repository.CreateExtraDeck(data)
 	if err != nil {
 		err = errors.New("failed to create extra deck card: " + err.Error())
 		errChan <- err
@@ -142,9 +142,9 @@ func CreateExtraDeckCard(data models.YOAExtraDeckCard, result chan models.YOAExt
 	result <- data
 }
 
-func CreateSideDeckCard(data models.YOASideDeckCard, result chan models.YOASideDeckCard, errChan chan error) {
+func CreateSideDeckCard(data models.YOASideDeck, result chan models.YOASideDeck, errChan chan error) {
 	var err error
-	data, err = repository.CreateSideDeckCard(data)
+	data, err = repository.CreateSideDeck(data)
 	if err != nil {
 		err = errors.New("failed to create side deck card: " + err.Error())
 		errChan <- err
@@ -345,17 +345,17 @@ func UpdateDeck(id uint, request dto.DeckRequest) (response models.YOADeck, stat
 	data.IsPublic = request.IsPublic
 
 	if len(request.MainDeckCardID) == 0 {
-		for _, item := range data.MainDeckCards {
+		for _, item := range data.MainDeck {
 			request.MainDeckCardID = append(request.MainDeckCardID, item.ID)
 		}
 	}
 	if len(request.ExtraDeckCardID) == 0 {
-		for _, item := range data.ExtraDeckCards {
+		for _, item := range data.ExtraDeck {
 			request.ExtraDeckCardID = append(request.ExtraDeckCardID, item.ID)
 		}
 	}
 	if len(request.SideDeckCardID) == 0 {
-		for _, item := range data.SideDeckCards {
+		for _, item := range data.SideDeck {
 			request.SideDeckCardID = append(request.SideDeckCardID, item.ID)
 		}
 	}
@@ -382,22 +382,22 @@ func UpdateDeck(id uint, request dto.DeckRequest) (response models.YOADeck, stat
 	}
 
 	if len(request.MainDeckCardID) > 0 {
-		data, _, _, _ := repository.GetMainDeckCards(dto.FindParameter{
+		data, _, _, _ := repository.GetMainDecks(dto.FindParameter{
 			Filter:       "deleted_at IS NULL AND deck_id = ?",
 			FilterValues: []any{response.ID},
 		})
 		if len(data) > 0 {
 			for _, item := range data {
-				go repository.DeleteMainDeckCard(item)
+				go repository.DeleteMainDeck(item)
 			}
 		}
 
-		mainDeckChan := make([]chan models.YOAMainDeckCard, len(mainDeckCards))
+		mainDeckChan := make([]chan models.YOAMainDeck, len(mainDeckCards))
 		mainDeckErrChan := make([]chan error, len(mainDeckCards))
 		for i, item := range mainDeckCards {
-			mainDeckChan[i] = make(chan models.YOAMainDeckCard)
+			mainDeckChan[i] = make(chan models.YOAMainDeck)
 			mainDeckErrChan[i] = make(chan error)
-			go CreateMainDeckCard(models.YOAMainDeckCard{
+			go CreateMainDeckCard(models.YOAMainDeck{
 				DeckID: response.ID,
 				CardID: item.ID,
 			}, mainDeckChan[i], mainDeckErrChan[i])
@@ -412,28 +412,28 @@ func UpdateDeck(id uint, request dto.DeckRequest) (response models.YOADeck, stat
 					return
 				}
 			case mainDeck := <-mainDeckChan[i]:
-				response.MainDeckCards = append(response.MainDeckCards, mainDeck)
+				response.MainDeck = append(response.MainDeck, mainDeck)
 			}
 		}
 	}
 
 	if len(request.ExtraDeckCardID) > 0 {
-		data, _, _, _ := repository.GetExtraDeckCards(dto.FindParameter{
+		data, _, _, _ := repository.GetExtraDecks(dto.FindParameter{
 			Filter:       "deleted_at IS NULL AND deck_id = ?",
 			FilterValues: []any{response.ID},
 		})
 		if len(data) > 0 {
 			for _, item := range data {
-				go repository.DeleteExtraDeckCard(item)
+				go repository.DeleteExtraDeck(item)
 			}
 		}
 
-		extraDeckChan := make([]chan models.YOAExtraDeckCard, len(extraDeckCards))
+		extraDeckChan := make([]chan models.YOAExtraDeck, len(extraDeckCards))
 		extraDeckErrChan := make([]chan error, len(extraDeckCards))
 		for i, item := range extraDeckCards {
-			extraDeckChan[i] = make(chan models.YOAExtraDeckCard)
+			extraDeckChan[i] = make(chan models.YOAExtraDeck)
 			extraDeckErrChan[i] = make(chan error)
-			go CreateExtraDeckCard(models.YOAExtraDeckCard{
+			go CreateExtraDeckCard(models.YOAExtraDeck{
 				DeckID: response.ID,
 				CardID: item.ID,
 			}, extraDeckChan[i], extraDeckErrChan[i])
@@ -448,28 +448,28 @@ func UpdateDeck(id uint, request dto.DeckRequest) (response models.YOADeck, stat
 					return
 				}
 			case extraDeck := <-extraDeckChan[i]:
-				response.ExtraDeckCards = append(response.ExtraDeckCards, extraDeck)
+				response.ExtraDeck = append(response.ExtraDeck, extraDeck)
 			}
 		}
 	}
 
 	if len(request.SideDeckCardID) > 0 {
-		data, _, _, _ := repository.GetSideDeckCards(dto.FindParameter{
+		data, _, _, _ := repository.GetSideDecks(dto.FindParameter{
 			Filter:       "deleted_at IS NULL AND deck_id = ?",
 			FilterValues: []any{response.ID},
 		})
 		if len(data) > 0 {
 			for _, item := range data {
-				go repository.DeleteSideDeckCard(item)
+				go repository.DeleteSideDeck(item)
 			}
 		}
 
-		sideDeckChan := make([]chan models.YOASideDeckCard, len(sideDeckCards))
+		sideDeckChan := make([]chan models.YOASideDeck, len(sideDeckCards))
 		sideDeckErrChan := make([]chan error, len(sideDeckCards))
 		for i, item := range sideDeckCards {
-			sideDeckChan[i] = make(chan models.YOASideDeckCard)
+			sideDeckChan[i] = make(chan models.YOASideDeck)
 			sideDeckErrChan[i] = make(chan error)
-			go CreateSideDeckCard(models.YOASideDeckCard{
+			go CreateSideDeckCard(models.YOASideDeck{
 				DeckID: response.ID,
 				CardID: item.ID,
 			}, sideDeckChan[i], sideDeckErrChan[i])
@@ -484,7 +484,7 @@ func UpdateDeck(id uint, request dto.DeckRequest) (response models.YOADeck, stat
 					return
 				}
 			case sideDeck := <-sideDeckChan[i]:
-				response.SideDeckCards = append(response.SideDeckCards, sideDeck)
+				response.SideDeck = append(response.SideDeck, sideDeck)
 			}
 		}
 	}
@@ -506,6 +506,36 @@ func DeleteDeck(id uint) (statusCode int, err error) {
 		return
 	}
 
+	mainDeck, _, _, _ := repository.GetMainDecks(dto.FindParameter{
+		Filter:       "deleted_at IS NULL AND deck_id = ?",
+		FilterValues: []any{data.ID},
+	})
+	if len(mainDeck) > 0 {
+		for _, item := range mainDeck {
+			go repository.DeleteMainDeck(item)
+		}
+	}
+
+	extraDeck, _, _, _ := repository.GetExtraDecks(dto.FindParameter{
+		Filter:       "deleted_at IS NULL AND deck_id = ?",
+		FilterValues: []any{data.ID},
+	})
+	if len(extraDeck) > 0 {
+		for _, item := range extraDeck {
+			go repository.DeleteExtraDeck(item)
+		}
+	}
+
+	sideDeck, _, _, _ := repository.GetSideDecks(dto.FindParameter{
+		Filter:       "deleted_at IS NULL AND deck_id = ?",
+		FilterValues: []any{data.ID},
+	})
+	if len(sideDeck) > 0 {
+		for _, item := range sideDeck {
+			go repository.DeleteSideDeck(item)
+		}
+	}
+
 	err = repository.DeleteDeck(data)
 	if err != nil {
 		err = errors.New("failed to delete data: " + err.Error())
@@ -518,7 +548,7 @@ func DeleteDeck(id uint) (statusCode int, err error) {
 }
 
 func ExportDeck(useName, useGroup bool, deckID uint) (file string, statusCode int, err error) {
-	deck, statusCode, err := GetDeckByID(deckID, []string{"MainDeckCards", "ExtraDeckCards", "SideDeckCards", "MainDeckCards.Card", "ExtraDeckCards.Card", "SideDeckCards.Card"})
+	deck, statusCode, err := GetDeckByID(deckID, []string{"MainDeck", "ExtraDeck", "SideDeck", "MainDeck.Card", "ExtraDeck.Card", "SideDeck.Card"})
 	if err != nil {
 		return
 	}
@@ -556,7 +586,7 @@ func ConvertToYDK(deck models.YOADeck, useName, useGroup bool) string {
 
 	// Main Deck
 	var mainDeckCards []models.YOACard
-	for _, item := range deck.MainDeckCards {
+	for _, item := range deck.MainDeck {
 		mainDeckCards = append(mainDeckCards, *item.Card)
 	}
 	sb.WriteString("#main\n")
@@ -564,7 +594,7 @@ func ConvertToYDK(deck models.YOADeck, useName, useGroup bool) string {
 
 	// Extra Deck
 	var extraDeckCards []models.YOACard
-	for _, item := range deck.ExtraDeckCards {
+	for _, item := range deck.ExtraDeck {
 		extraDeckCards = append(extraDeckCards, *item.Card)
 	}
 	sb.WriteString("\n#extra\n")
@@ -572,7 +602,7 @@ func ConvertToYDK(deck models.YOADeck, useName, useGroup bool) string {
 
 	// Side Deck
 	var sideDeckCards []models.YOACard
-	for _, item := range deck.SideDeckCards {
+	for _, item := range deck.SideDeck {
 		sideDeckCards = append(sideDeckCards, *item.Card)
 	}
 	sb.WriteString("\n#side\n")

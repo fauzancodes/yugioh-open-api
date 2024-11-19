@@ -40,9 +40,9 @@ func RunAutoMigration() {
 		&models.YOACard{},
 		&models.YOADeck{},
 		&models.YOAUser{},
-		&models.YOAMainDeckCard{},
-		&models.YOAExtraDeckCard{},
-		&models.YOASideDeckCard{},
+		&models.YOAMainDeck{},
+		&models.YOAExtraDeck{},
+		&models.YOASideDeck{},
 	)
 	if err != nil {
 		log.Fatalf("Failed to migrate database: %v", err)

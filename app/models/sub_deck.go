@@ -1,34 +1,34 @@
 package models
 
-type YOAMainDeckCard struct {
+type YOAMainDeck struct {
 	CustomGormModel
-	DeckID uint     `json:"deck_id" gorm:"type:int8;column:yoa_deck_id"`
-	CardID uint     `json:"card_id" gorm:"type:int8;column:yoa_card_id"`
+	DeckID uint     `json:"deck_id" gorm:"type:int8;column:deck_id"`
+	CardID uint     `json:"card_id" gorm:"type:int8;column:card_id"`
 	Card   *YOACard `json:"card,omitempty" gorm:"foreignKey:CardID"`
 }
 
-func (YOAMainDeckCard) TableName() string {
-	return "yoa_main_deck_cards"
+func (YOAMainDeck) TableName() string {
+	return "yoa_main_decks"
 }
 
-type YOAExtraDeckCard struct {
+type YOAExtraDeck struct {
 	CustomGormModel
-	DeckID uint     `json:"deck_id" gorm:"type:int8;column:yoa_deck_id"`
-	CardID uint     `json:"card_id" gorm:"type:int8;column:yoa_card_id"`
+	DeckID uint     `json:"deck_id" gorm:"type:int8;column:deck_id"`
+	CardID uint     `json:"card_id" gorm:"type:int8;column:card_id"`
 	Card   *YOACard `json:"card,omitempty" gorm:"foreignKey:CardID"`
 }
 
-func (YOAExtraDeckCard) TableName() string {
-	return "yoa_extra_deck_cards"
+func (YOAExtraDeck) TableName() string {
+	return "yoa_extra_decks"
 }
 
-type YOASideDeckCard struct {
+type YOASideDeck struct {
 	CustomGormModel
-	DeckID uint     `json:"deck_id" gorm:"type:int8;column:yoa_deck_id"`
-	CardID uint     `json:"card_id" gorm:"type:int8;column:yoa_card_id"`
+	DeckID uint     `json:"deck_id" gorm:"type:int8;column:deck_id"`
+	CardID uint     `json:"card_id" gorm:"type:int8;column:card_id"`
 	Card   *YOACard `json:"card,omitempty" gorm:"foreignKey:CardID"`
 }
 
-func (YOASideDeckCard) TableName() string {
-	return "yoa_side_deck_cards"
+func (YOASideDeck) TableName() string {
+	return "yoa_side_decks"
 }

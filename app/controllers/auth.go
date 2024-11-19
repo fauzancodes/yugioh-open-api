@@ -158,7 +158,12 @@ func GetCurrentUser(c echo.Context) error {
 
 	data, statusCode, err := service.GetUserByID(userID, []string{
 		"Decks",
-		"Decks.Cards",
+		"Decks.MainDeck",
+		"Decks.ExtraDeck",
+		"Decks.SideDeck",
+		"Decks.MainDeck.Card",
+		"Decks.ExtraDeck.Card",
+		"Decks.SideDeck.Card",
 	})
 	if err != nil {
 		return c.JSON(
