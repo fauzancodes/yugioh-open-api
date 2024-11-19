@@ -260,7 +260,7 @@ func AdjustDeckCards(request dto.DeckRequest) (mainDeckCards []models.YOACard, e
 	return
 }
 
-func GetDeckByID(id uint, preloadFields []string) (data models.YOADeck, statusCode int, err error) {
+func GetDeckByID(id, userID uint, preloadFields []string) (data models.YOADeck, statusCode int, err error) {
 	data, err = repository.GetDeckByID(id, preloadFields)
 	if err != nil {
 		err = errors.New("failed to get data: " + err.Error())
@@ -270,6 +270,15 @@ func GetDeckByID(id uint, preloadFields []string) (data models.YOADeck, statusCo
 		}
 
 		statusCode = http.StatusInternalServerError
+		return
+	}
+
+	if data.UserID != userID {
+		if !data.IsPublic {
+			statusCode = http.StatusNotFound
+			err = errors.New("data not found")
+		}
+
 		return
 	}
 
@@ -323,7 +332,7 @@ func GetDecks(userID uint, param utils.PagingRequest, preloadFields []string) (r
 	return
 }
 
-func UpdateDeck(id uint, request dto.DeckRequest) (response models.YOADeck, statusCode int, err error) {
+func UpdateDeck(id, userID uint, request dto.DeckRequest) (response models.YOADeck, statusCode int, err error) {
 	data, err := repository.GetDeckByID(id, []string{})
 	if err != nil {
 		err = errors.New("failed to get data: " + err.Error())
@@ -333,6 +342,13 @@ func UpdateDeck(id uint, request dto.DeckRequest) (response models.YOADeck, stat
 		}
 
 		statusCode = http.StatusInternalServerError
+		return
+	}
+
+	if data.UserID != userID {
+		statusCode = http.StatusNotFound
+		err = errors.New("data not found")
+
 		return
 	}
 
@@ -493,7 +509,7 @@ func UpdateDeck(id uint, request dto.DeckRequest) (response models.YOADeck, stat
 	return
 }
 
-func DeleteDeck(id uint) (statusCode int, err error) {
+func DeleteDeck(id, userID uint) (statusCode int, err error) {
 	data, err := repository.GetDeckByID(id, []string{})
 	if err != nil {
 		err = errors.New("failed to get data: " + err.Error())
@@ -503,6 +519,12 @@ func DeleteDeck(id uint) (statusCode int, err error) {
 		}
 
 		statusCode = http.StatusInternalServerError
+		return
+	}
+	if data.UserID != userID {
+		statusCode = http.StatusNotFound
+		err = errors.New("data not found")
+
 		return
 	}
 
@@ -547,8 +569,8 @@ func DeleteDeck(id uint) (statusCode int, err error) {
 	return
 }
 
-func ExportDeck(useName, useGroup bool, deckID uint) (file string, statusCode int, err error) {
-	deck, statusCode, err := GetDeckByID(deckID, []string{"MainDeck", "ExtraDeck", "SideDeck", "MainDeck.Card", "ExtraDeck.Card", "SideDeck.Card"})
+func ExportDeck(useName, useGroup bool, deckID, userID uint) (file string, statusCode int, err error) {
+	deck, statusCode, err := GetDeckByID(deckID, userID, []string{"MainDeck", "ExtraDeck", "SideDeck", "MainDeck.Card", "ExtraDeck.Card", "SideDeck.Card"})
 	if err != nil {
 		return
 	}

@@ -1,0 +1,968 @@
+{
+	"info": {
+		"_postman_id": "ae495042-6baa-4cb1-b161-d28249a40083",
+		"name": "Yu-Gi-Oh! Open API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25300027",
+		"_collection_link": "https://fauzancodes.postman.co/workspace/Team-Workspace~34d91d2f-9cc2-4352-8a90-0b3e69f8e68e/collection/25300027-ae495042-6baa-4cb1-b161-d28249a40083?action=share&source=collection_link&creator=25300027"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"player\",\r\n    \"password\":\"player\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/v1/auth/register",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "Uh/UB%SKft3CU3e0zJAvBhp3cyo/un2021/zLQf1BKGZZuQ6w5P9VAM6Sj0CcQCm",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"player\",\r\n    \"password\":\"player\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/v1/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate API Key",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/v1/auth/generate-api-key",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"generate-api-key"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Current User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/v1/auth/user",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"spatializer\",\r\n    \"password\":\"Smoke 'em out 170497\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/v1/auth/update-profile",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"update-profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/v1/auth/remove-account",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"remove-account"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Card",
+			"item": [
+				{
+					"name": "Get Cards",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/v1/card?card_type=&race=&archetype&attribute=&cardsets&rarity&rarity_code=&attack=&attack_margin_top&attack_margin_bottom=&defense&defense_margin_top&defense_margin_bottom=&level=&level_margin_top&level_margin_bottom&page&search=eldlich&limit=20&offset&order&sort",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"card"
+							],
+							"query": [
+								{
+									"key": "card_type",
+									"value": "",
+									"description": "Card Type"
+								},
+								{
+									"key": "race",
+									"value": "",
+									"description": "Race"
+								},
+								{
+									"key": "archetype",
+									"value": null,
+									"description": "Archetype"
+								},
+								{
+									"key": "attribute",
+									"value": "",
+									"description": "Attribute"
+								},
+								{
+									"key": "cardsets",
+									"value": null,
+									"description": "Card Sets"
+								},
+								{
+									"key": "rarity",
+									"value": null,
+									"description": "Rarity"
+								},
+								{
+									"key": "rarity_code",
+									"value": "",
+									"description": "Rarity Code"
+								},
+								{
+									"key": "attack",
+									"value": "",
+									"description": "Attack"
+								},
+								{
+									"key": "attack_margin_top",
+									"value": null,
+									"description": "Attack Margin Top"
+								},
+								{
+									"key": "attack_margin_bottom",
+									"value": "",
+									"description": "Attack Margin Bottom"
+								},
+								{
+									"key": "defense",
+									"value": null,
+									"description": "Defense"
+								},
+								{
+									"key": "defense_margin_top",
+									"value": null,
+									"description": "Defense Margin Top"
+								},
+								{
+									"key": "defense_margin_bottom",
+									"value": "",
+									"description": "Defense Margin Bottom"
+								},
+								{
+									"key": "level",
+									"value": "",
+									"description": "Level"
+								},
+								{
+									"key": "level_margin_top",
+									"value": null,
+									"description": "Level Margin Top"
+								},
+								{
+									"key": "level_margin_bottom",
+									"value": null,
+									"description": "Level Margin Bottom"
+								},
+								{
+									"key": "page",
+									"value": null,
+									"description": "Page, default: 1"
+								},
+								{
+									"key": "search",
+									"value": "eldlich",
+									"description": "Search by name and description"
+								},
+								{
+									"key": "limit",
+									"value": "20",
+									"description": "Number of data returned, default: 10"
+								},
+								{
+									"key": "offset",
+									"value": null,
+									"description": "Number of data to be skipped, default: 0"
+								},
+								{
+									"key": "order",
+									"value": null,
+									"description": "Data will be ordered respectively, default: created_at"
+								},
+								{
+									"key": "sort",
+									"value": null,
+									"description": "Data will be sorted respectively, default: DESC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Card",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/v1/card/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"card",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Card Utility",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/v1/card/utility?field=type",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"card",
+								"utility"
+							],
+							"query": [
+								{
+									"key": "field",
+									"value": "type",
+									"description": "Accepted Fields: type, race, archetype, level, card_sets, rarity, attribute, rarity_code"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Card",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/v1/card/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"card",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Card",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Agni & Rudra, Swords of Elemental Fury\",\r\n  \"type\": \"Effect Monster\",\r\n  \"description\": \"If a Warrior monster you control is destroyed by an opponent's card (battle or card effect), you can Special Summon this card from your hand. If this card is on the field, you can use it as a Fusion Material for the Fusion Summon of a Warrior or Elemental Fusion Monster with a FIRE or WIND attribute. Once per turn, you can activate one of the following effects: 1. Agni's Flame Slash: Destroy 1 monster on the field with ATK lower than this card's. Your opponent takes 500 damage. 2. Rudra's Wind Cyclone: Return 1 Spell/Trap card your opponent controls to their hand.\",\r\n  \"race\": \"Warrior\",\r\n  \"archetype\": \"\",\r\n  \"attack\": 2400,\r\n  \"defense\": 1800,\r\n  \"level\": 5,\r\n  \"attribute\": \"FIRE\",\r\n  \"card_sets\": \"\",\r\n  \"image_url\": \"https://static.wikia.nocookie.net/devilmaycry/images/7/73/AgniRudra.gif/revision/latest?cb=20130220040706\",\r\n  \"rarity\": \"Super Rare\",\r\n  \"rarity_code\": \"SR\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/v1/card",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"card"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Card",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Blue-Eyes Dark Dragon\",\r\n  \"type\": \"Normal Monster\",\r\n  \"description\": \"This legendary dark dragon is a powerful engine of destruction.\",\r\n  \"race\": \"Dragon\",\r\n  \"archetype\": \"Dark-Eyes\",\r\n  \"attack\": 5000,\r\n  \"defense\": 2500,\r\n  \"level\": 8,\r\n  \"attribute\": \"Darkmn\",\r\n  \"card_sets\": \"Legend of Dark Eyes White Dragon\",\r\n  \"image_url\": \"https://example.com/blue-eyes-white-dragon.jpg\",\r\n  \"rarity\": \"Ultra Rare\",\r\n  \"rarity_code\": \"UR\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/v1/card/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"card",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Deck",
+			"item": [
+				{
+					"name": "Get Decks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/v1/deck?page&search&limit&offset&order&sort&preload_fields=MainDeck,ExtraDeck,SideDeck,MainDeck.Card,ExtraDeck.Card,SideDeck.Card",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"deck"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": null,
+									"description": "Page, default: 1"
+								},
+								{
+									"key": "search",
+									"value": null,
+									"description": "Search by name and description"
+								},
+								{
+									"key": "limit",
+									"value": null,
+									"description": "Number of data returned, default: 10"
+								},
+								{
+									"key": "offset",
+									"value": null,
+									"description": "Number of data to be skipped, default: 0"
+								},
+								{
+									"key": "order",
+									"value": null,
+									"description": "Data will be ordered respectively, default: created_at"
+								},
+								{
+									"key": "sort",
+									"value": null,
+									"description": "Data will be sorted respectively, default: DESC"
+								},
+								{
+									"key": "preload_fields",
+									"value": "MainDeck,ExtraDeck,SideDeck,MainDeck.Card,ExtraDeck.Card,SideDeck.Card",
+									"description": "Accepted Value (seperated by comma): MainDeck, ExtraDeck, SideDeck, MainDeck.Card, ExtraDeck.Card, SideDeck.Card"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Public Decks",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/v1/deck/public?page&search&limit&offset&order&sort&preload_fields=MainDeck,ExtraDeck,SideDeck,MainDeck.Card,ExtraDeck.Card,SideDeck.Card",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"deck",
+								"public"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": null,
+									"description": "Page, default: 1"
+								},
+								{
+									"key": "search",
+									"value": null,
+									"description": "Search by name and description"
+								},
+								{
+									"key": "limit",
+									"value": null,
+									"description": "Number of data returned, default: 10"
+								},
+								{
+									"key": "offset",
+									"value": null,
+									"description": "Number of data to be skipped, default: 0"
+								},
+								{
+									"key": "order",
+									"value": null,
+									"description": "Data will be ordered respectively, default: created_at"
+								},
+								{
+									"key": "sort",
+									"value": null,
+									"description": "Data will be sorted respectively, default: DESC"
+								},
+								{
+									"key": "preload_fields",
+									"value": "MainDeck,ExtraDeck,SideDeck,MainDeck.Card,ExtraDeck.Card,SideDeck.Card",
+									"description": "Accepted Value (seperated by comma): MainDeck, ExtraDeck, SideDeck, MainDeck.Card, ExtraDeck.Card, SideDeck.Card"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Deck",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/v1/deck/:id?preload_fields=MainDeck,ExtraDeck,SideDeck,MainDeck.Card,ExtraDeck.Card,SideDeck.Card",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"deck",
+								":id"
+							],
+							"query": [
+								{
+									"key": "preload_fields",
+									"value": "MainDeck,ExtraDeck,SideDeck,MainDeck.Card,ExtraDeck.Card,SideDeck.Card",
+									"description": "Accepted Value (seperated by comma): MainDeck, ExtraDeck, SideDeck, MainDeck.Card, ExtraDeck.Card, SideDeck.Card"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Export Deck",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/v1/deck/export/:id?identifier=name&group_copy=true",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"deck",
+								"export",
+								":id"
+							],
+							"query": [
+								{
+									"key": "identifier",
+									"value": "name",
+									"description": "Identifier. Available: name, id. Default: id"
+								},
+								{
+									"key": "group_copy",
+									"value": "true",
+									"description": "Do grouping on the same cards. Default: false"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Deck",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/v1/deck/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"deck",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Deck",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Yami Yugi Deck\",\r\n    \"description\": \"Yami Yugi Deck\",\r\n    \"is_public\": true,\r\n    \"main_deck_card_id\": [\r\n        46986414,46986414,38033121,78193831,40640057,40640057,40640057,70781052,91152256,10000020,\r\n        10000010,10000000,83764719,83764719,72302403,44095762,44095762,62279055,62279055,42664989,\r\n        87910978,40703222,24224830,67169062,67494157,99177923,77207191,3510565,94119974,39256679,\r\n        32452818,64428736,4031928,55144522,66788016,23471572,46918794,98239899,22802010,71413901\r\n    ],\r\n    \"extra_deck_card_id\": [\r\n        4796100\r\n    ],\r\n    \"side_deck_card_id\": [\r\n        46986414,62279055\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/v1/deck",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"deck"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Deck",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{API_KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"First Deck Edited\",\r\n    \"description\": \"First Deck Edited\",\r\n    \"is_public\": false,\r\n    \"main_deck_card_id\": [\r\n        36151751,\r\n        36151751,\r\n        36151751,\r\n        23771716,\r\n        23771716,\r\n        23771716,\r\n        40387124,\r\n        40387124,\r\n        40387124,\r\n        77568553,\r\n        47372349,\r\n        8353769,\r\n        48202661,\r\n        70924884,\r\n        38035986,\r\n        36904469,\r\n        11250655,\r\n        43096270,\r\n        97127906,\r\n        64428736,\r\n        89386122,\r\n        99785935,\r\n        84990171,\r\n        17968114,\r\n        67371383,\r\n        42431843,\r\n        93221206,\r\n        63028558,\r\n        81492226,\r\n        43230671,\r\n        14015067,\r\n        36821538,\r\n        49587396,\r\n        86421986,\r\n        47484352,\r\n        86893702,\r\n        48365709,\r\n        89904598,\r\n        85639257,\r\n        12436646,\r\n        75889523,\r\n        15150371,\r\n        49881766,\r\n        53153481,\r\n        14708569\r\n    ],\r\n    \"extra_deck_card_id\": [\r\n        65172015,\r\n        3544583,\r\n        1561110,\r\n        10796448,\r\n        28143384,\r\n        35877582,\r\n        3410461,\r\n        87746184,\r\n        38811586,\r\n        3366982,\r\n        23965033,\r\n        4591250,\r\n        68507541,\r\n        59353647,\r\n        98927491\r\n    ],\r\n    \"side_deck_card_id\": [\r\n        34541863,\r\n        64163367,\r\n        91231901,\r\n        73262676,\r\n        98319530,\r\n        37478723,\r\n        64867422,\r\n        68170903,\r\n        21597117,\r\n        32207100,\r\n        5728014,\r\n        44553392,\r\n        75926389,\r\n        28645123,\r\n        77421977\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/v1/deck/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"v1",
+								"deck",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Index",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"key": "base_url",
+			"value": "https://postman-rest-api-learner.glitch.me/"
+		}
+	]
+}

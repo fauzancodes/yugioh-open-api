@@ -84,10 +84,13 @@ func GetDecks(c echo.Context) error {
 }
 
 func GetDeckByID(c echo.Context) error {
+	userID := utils.GetCurrentUserID(c)
+	log.Printf("Current user ID: %v", userID)
+
 	id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	preloadFields := utils.GetBuildPreloadFields(c)
 
-	data, statusCode, err := service.GetDeckByID(uint(id), preloadFields)
+	data, statusCode, err := service.GetDeckByID(uint(id), userID, preloadFields)
 	if err != nil {
 		return c.JSON(
 			statusCode,
@@ -110,6 +113,9 @@ func GetDeckByID(c echo.Context) error {
 }
 
 func UpdateDeck(c echo.Context) error {
+	userID := utils.GetCurrentUserID(c)
+	log.Printf("Current user ID: %v", userID)
+
 	id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 
 	var request dto.DeckRequest
@@ -135,7 +141,7 @@ func UpdateDeck(c echo.Context) error {
 		)
 	}
 
-	data, statusCode, err := service.UpdateDeck(uint(id), request)
+	data, statusCode, err := service.UpdateDeck(uint(id), userID, request)
 	if err != nil {
 		return c.JSON(
 			statusCode,
@@ -158,9 +164,12 @@ func UpdateDeck(c echo.Context) error {
 }
 
 func DeleteDeck(c echo.Context) error {
+	userID := utils.GetCurrentUserID(c)
+	log.Printf("Current user ID: %v", userID)
+
 	id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 
-	statusCode, err := service.DeleteDeck(uint(id))
+	statusCode, err := service.DeleteDeck(uint(id), userID)
 	if err != nil {
 		return c.JSON(
 			statusCode,
@@ -202,12 +211,15 @@ func GetPublicDecks(c echo.Context) error {
 }
 
 func ExportDeckByID(c echo.Context) error {
+	userID := utils.GetCurrentUserID(c)
+	log.Printf("Current user ID: %v", userID)
+
 	id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 
 	useName := strings.ToLower(c.QueryParam("identifier")) == "name"
 	useGroup, _ := strconv.ParseBool(c.QueryParam("group_copy"))
 
-	data, statusCode, err := service.ExportDeck(useName, useGroup, uint(id))
+	data, statusCode, err := service.ExportDeck(useName, useGroup, uint(id), userID)
 	if err != nil {
 		return c.JSON(
 			statusCode,
