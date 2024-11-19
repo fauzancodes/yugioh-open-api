@@ -7,26 +7,8 @@ import (
 	"github.com/fauzancodes/yugioh-open-api/app/utils"
 )
 
-func CreateDeck(data models.YOADeck, mainDeckCards []models.YOACard, extraDeckCards []models.YOACard, sideDeckCards []models.YOACard) (models.YOADeck, error) {
+func CreateDeck(data models.YOADeck) (models.YOADeck, error) {
 	err := config.DB.Create(&data).Error
-	if err != nil {
-		return models.YOADeck{}, err
-	}
-
-	err = config.DB.Model(&data).Association("MainDeckCards").Append(mainDeckCards)
-	if err != nil {
-		return models.YOADeck{}, err
-	}
-
-	err = config.DB.Model(&data).Association("ExtraDeckCards").Append(extraDeckCards)
-	if err != nil {
-		return models.YOADeck{}, err
-	}
-
-	err = config.DB.Model(&data).Association("SideDeckCards").Append(sideDeckCards)
-	if err != nil {
-		return models.YOADeck{}, err
-	}
 
 	return data, err
 }
@@ -61,38 +43,8 @@ func GetDecks(param dto.FindParameter, preloadFields []string) (responses []mode
 	return
 }
 
-func UpdateDeck(data models.YOADeck, mainDeckCards []models.YOACard, extraDeckCards []models.YOACard, sideDeckCards []models.YOACard) (models.YOADeck, error) {
+func UpdateDeck(data models.YOADeck) (models.YOADeck, error) {
 	err := config.DB.Save(&data).Error
-	if err != nil {
-		return models.YOADeck{}, err
-	}
-
-	err = config.DB.Model(&data).Association("MainDeckCards").Clear()
-	if err != nil {
-		return models.YOADeck{}, err
-	}
-	err = config.DB.Model(&data).Association("MainDeckCards").Append(mainDeckCards)
-	if err != nil {
-		return models.YOADeck{}, err
-	}
-
-	err = config.DB.Model(&data).Association("ExtraDeckCards").Clear()
-	if err != nil {
-		return models.YOADeck{}, err
-	}
-	err = config.DB.Model(&data).Association("ExtraDeckCards").Append(extraDeckCards)
-	if err != nil {
-		return models.YOADeck{}, err
-	}
-
-	err = config.DB.Model(&data).Association("SideDeckCards").Clear()
-	if err != nil {
-		return models.YOADeck{}, err
-	}
-	err = config.DB.Model(&data).Association("SideDeckCards").Append(sideDeckCards)
-	if err != nil {
-		return models.YOADeck{}, err
-	}
 
 	return data, err
 }

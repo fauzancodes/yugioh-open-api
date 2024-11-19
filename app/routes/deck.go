@@ -15,5 +15,6 @@ func DeckRoute(api *echo.Group) {
 		deck.GET("/:id", controllers.GetDeckByID, middlewares.CheckAPIKey, middlewares.Auth)
 		deck.PATCH("/:id", controllers.UpdateDeck, middlewares.CheckAPIKey, middlewares.Auth)
 		deck.DELETE("/:id", controllers.DeleteDeck, middlewares.CheckAPIKey, middlewares.Auth)
+		deck.GET("/export/:id", controllers.ExportDeckByID, middlewares.CheckAPIKey, middlewares.Auth)
 	}
 }

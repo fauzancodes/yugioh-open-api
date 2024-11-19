@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/fauzancodes/yugioh-open-api/app/dto"
 	"github.com/fauzancodes/yugioh-open-api/app/service"
@@ -198,4 +199,25 @@ func GetPublicDecks(c echo.Context) error {
 	}
 
 	return c.JSON(statusCode, data)
+}
+
+func ExportDeckByID(c echo.Context) error {
+	id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+
+	useName := strings.ToLower(c.QueryParam("identifier")) == "name"
+	useGroup, _ := strconv.ParseBool(c.QueryParam("group_copy"))
+
+	data, statusCode, err := service.ExportDeck(useName, useGroup, uint(id))
+	if err != nil {
+		return c.JSON(
+			statusCode,
+			dto.Response{
+				Status:  statusCode,
+				Message: "Failed to get data",
+				Error:   err.Error(),
+			},
+		)
+	}
+
+	return c.Blob(http.StatusOK, "application/octet-stream", []byte(data))
 }
