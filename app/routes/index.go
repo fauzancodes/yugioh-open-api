@@ -11,6 +11,8 @@ func Route(app *echo.Echo) {
 	app.Static("/docs", "docs")
 
 	app.GET("/", controllers.Index, middlewares.StripHTMLMiddleware)
+	app.GET("/postman/collection", controllers.DownloadPostmanCollection, middlewares.StripHTMLMiddleware)
+	app.GET("/postman/environment", controllers.DownloadPostmanEnvironment, middlewares.StripHTMLMiddleware)
 	api := app.Group("/v1", middlewares.StripHTMLMiddleware)
 	{
 		AuthRoute(api)

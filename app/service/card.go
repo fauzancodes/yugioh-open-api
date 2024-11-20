@@ -3,11 +3,14 @@ package service
 import (
 	"errors"
 	"fmt"
+	"mime/multipart"
 	"net/http"
+	"path/filepath"
 	"strings"
 
 	"github.com/fauzancodes/yugioh-open-api/app/dto"
 	"github.com/fauzancodes/yugioh-open-api/app/models"
+	"github.com/fauzancodes/yugioh-open-api/app/pkg/upload"
 	"github.com/fauzancodes/yugioh-open-api/app/utils"
 	"github.com/fauzancodes/yugioh-open-api/repository"
 	"gorm.io/gorm"
@@ -289,5 +292,32 @@ func GetCardUtility(field string) (responses []string, statusCode int, err error
 		responses = utils.RemoveDuplicatesFromStringArray(responses)
 	}
 
+	return
+}
+
+func UploadCardPicture(file *multipart.FileHeader) (responseURL string, statusCode int, err error) {
+	extension := filepath.Ext(file.Filename)
+	if extension != ".png" && extension != ".jpg" && extension != ".jpeg" && extension != ".webp" {
+		err = errors.New("the file extension is wrong. allowed file extensions are images (.png, .jpg, .jpeg, .webp)")
+		statusCode = http.StatusBadRequest
+		return
+	}
+
+	var src multipart.File
+	src, err = file.Open()
+	if err != nil {
+		err = errors.New("failed to open file: " + err.Error())
+		statusCode = http.StatusInternalServerError
+		return
+	}
+	defer src.Close()
+
+	responseURL, _, _, err = upload.UploadImageOrVideo(src, "", "")
+	if err != nil {
+		statusCode = http.StatusInternalServerError
+		return
+	}
+
+	statusCode = http.StatusOK
 	return
 }

@@ -254,3 +254,52 @@ func GetCardUtility(c echo.Context) error {
 		},
 	)
 }
+
+func UploadCardPicture(c echo.Context) error {
+	userID := utils.GetCurrentUserID(c)
+	log.Printf("Current user ID: %v", userID)
+
+	user, _, _ := service.GetUserByID(userID, []string{})
+	if !user.IsAdmin {
+		return c.JSON(
+			http.StatusForbidden,
+			dto.Response{
+				Status:  http.StatusForbidden,
+				Message: "Only admins are allowed",
+			},
+		)
+	}
+
+	file, err := c.FormFile("image")
+	if err != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			dto.Response{
+				Status:  500,
+				Message: "Failed to get file from form",
+				Error:   err.Error(),
+			},
+		)
+	}
+
+	responseURL, statusCode, err := service.UploadCardPicture(file)
+	if err != nil {
+		return c.JSON(
+			statusCode,
+			dto.Response{
+				Status:  statusCode,
+				Message: "Failed to upload card picture",
+				Error:   err.Error(),
+			},
+		)
+	}
+
+	return c.JSON(
+		statusCode,
+		dto.Response{
+			Status:  statusCode,
+			Message: "Success to upload",
+			Data:    responseURL,
+		},
+	)
+}

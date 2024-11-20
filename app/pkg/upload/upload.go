@@ -54,7 +54,7 @@ func CheckAssetExistanceByPublicID(filename string) (isExist bool, secureUrl str
 	return
 }
 
-func UploadFile(file interface{}, folder string, filename string) (secureUrl, publicID, cloudName string, err error) {
+func UploadImageOrVideo(file interface{}, folder string, filename string) (secureUrl, publicID, cloudName string, err error) {
 	if folder != "" {
 		folder = config.LoadConfig().CloudinaryFolder + "/" + folder
 	} else {

@@ -10,6 +10,7 @@ func CardRoute(api *echo.Group) {
 	card := api.Group("/card")
 	{
 		card.POST("", controllers.CreateCard, middlewares.CheckAPIKey, middlewares.Auth)
+		card.POST("/upload-picture", controllers.UploadCardPicture, middlewares.CheckAPIKey, middlewares.Auth)
 		card.GET("", controllers.GetCards)
 		card.GET("/:id", controllers.GetCardByID)
 		card.PATCH("/:id", controllers.UpdateCard, middlewares.CheckAPIKey, middlewares.Auth)

@@ -3,6 +3,7 @@ module github.com/fauzancodes/yugioh-open-api
 go 1.21.6
 
 require (
+	github.com/Backblaze/blazer v0.7.1
 	github.com/cloudinary/cloudinary-go/v2 v2.9.0
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/golang-jwt/jwt/v5 v5.2.1

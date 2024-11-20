@@ -46,7 +46,7 @@ func main() {
 			}
 
 			// Upload the image to Cloudinary if it does not exist
-			secureUrl, _, _, err := upload.UploadFile(path, "", filename)
+			secureUrl, _, _, err := upload.UploadImageOrVideo(path, "", filename)
 			if err != nil {
 				fmt.Printf("Failed to upload %s: %v\n", fileName, err)
 			} else {
