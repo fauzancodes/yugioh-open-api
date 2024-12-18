@@ -31,6 +31,13 @@ Welcome to the **Yu-Gi-Oh! Open API** documentation. This API is built using the
 - **Comprehensive Documentation**:  
   Navigate through the API with ease using clear, organized [Postman](https://www.postman.com/) documentation designed to ensure a smooth development experience for all developers.
 
+## How to Use?
+- Register via endpoint, `POST /v1/auth/register`
+- Create API Key via endpoint, `POST /v1/auth/generate-api-key`
+- Calculate the HMAC signature between the `public_key` and the `secret_key` using SHA-256.
+- The result of the HMAC calculation is combined with the `public_key` with the pattern `public_key:hmac_result`.
+- Then, encode the pattern with the Base64 algorithm, put the endcode result in the request header as `X-Api-key`.
+
 ---
 
 © 2024 Yu-Gi-Oh! Open API Project. All rights reserved. By [fauzancodes](https://fauzancodes.id/).
