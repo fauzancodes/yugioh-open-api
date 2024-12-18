@@ -123,7 +123,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/v1/auth/user",
+							"raw": "{{BASE_URL}}/v1/auth/user?with_decks=false&with_deck_cards=false",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -131,6 +131,18 @@
 								"v1",
 								"auth",
 								"user"
+							],
+							"query": [
+								{
+									"key": "with_decks",
+									"value": "false",
+									"description": "Will display all decks that have been created"
+								},
+								{
+									"key": "with_deck_cards",
+									"value": "false",
+									"description": "Will display all cards in all decks that have been created"
+								}
 							]
 						}
 					},
@@ -616,7 +628,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/v1/deck?page&search&limit&offset&order&sort&preload_fields=MainDeck,ExtraDeck,SideDeck,MainDeck.Card,ExtraDeck.Card,SideDeck.Card",
+							"raw": "{{BASE_URL}}/v1/deck?page&search&limit&offset&order&sort&with_user=false&with_cards=false",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -656,9 +668,14 @@
 									"description": "Data will be sorted respectively, default: DESC"
 								},
 								{
-									"key": "preload_fields",
-									"value": "MainDeck,ExtraDeck,SideDeck,MainDeck.Card,ExtraDeck.Card,SideDeck.Card",
-									"description": "Accepted Value (seperated by comma): MainDeck, ExtraDeck, SideDeck, MainDeck.Card, ExtraDeck.Card, SideDeck.Card"
+									"key": "with_user",
+									"value": "false",
+									"description": "Will display the user who owns the deck"
+								},
+								{
+									"key": "with_cards",
+									"value": "false",
+									"description": "Will display all cards in the deck"
 								}
 							]
 						}
@@ -674,7 +691,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/v1/deck/public?page&search&limit&offset&order&sort&preload_fields=MainDeck,ExtraDeck,SideDeck,MainDeck.Card,ExtraDeck.Card,SideDeck.Card",
+							"raw": "{{BASE_URL}}/v1/deck/public?page&search&limit&offset&order&sort&with_cards=false",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -715,9 +732,9 @@
 									"description": "Data will be sorted respectively, default: DESC"
 								},
 								{
-									"key": "preload_fields",
-									"value": "MainDeck,ExtraDeck,SideDeck,MainDeck.Card,ExtraDeck.Card,SideDeck.Card",
-									"description": "Accepted Value (seperated by comma): MainDeck, ExtraDeck, SideDeck, MainDeck.Card, ExtraDeck.Card, SideDeck.Card"
+									"key": "with_cards",
+									"value": "false",
+									"description": "Will display all cards in the deck"
 								}
 							]
 						}
@@ -746,7 +763,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/v1/deck/:id?preload_fields=MainDeck,ExtraDeck,SideDeck,MainDeck.Card,ExtraDeck.Card,SideDeck.Card",
+							"raw": "{{BASE_URL}}/v1/deck/:id?with_user=false&with_cards=false",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -757,9 +774,14 @@
 							],
 							"query": [
 								{
-									"key": "preload_fields",
-									"value": "MainDeck,ExtraDeck,SideDeck,MainDeck.Card,ExtraDeck.Card,SideDeck.Card",
-									"description": "Accepted Value (seperated by comma): MainDeck, ExtraDeck, SideDeck, MainDeck.Card, ExtraDeck.Card, SideDeck.Card"
+									"key": "with_user",
+									"value": "false",
+									"description": "Will display the user who owns the deck"
+								},
+								{
+									"key": "with_cards",
+									"value": "false",
+									"description": "Will display all cards in the deck"
 								}
 							],
 							"variable": [

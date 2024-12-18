@@ -3,6 +3,7 @@ package controllers
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/fauzancodes/yugioh-open-api/app/dto"
@@ -153,18 +154,21 @@ func Login(c echo.Context) error {
 }
 
 func GetCurrentUser(c echo.Context) error {
+	withDecks, _ := strconv.ParseBool(c.QueryParam("with_decks"))
+	withDeckCards, _ := strconv.ParseBool(c.QueryParam("with_deck_cards"))
+
 	userID := utils.GetCurrentUserID(c)
 	log.Printf("Current user ID: %v", userID)
 
-	data, statusCode, err := service.GetUserByID(userID, []string{
-		"Decks",
-		"Decks.MainDeck",
-		"Decks.ExtraDeck",
-		"Decks.SideDeck",
-		"Decks.MainDeck.Card",
-		"Decks.ExtraDeck.Card",
-		"Decks.SideDeck.Card",
-	})
+	var preloadFields []string
+	if withDecks {
+		preloadFields = append(preloadFields, "Decks")
+	}
+	if withDeckCards {
+		preloadFields = append(preloadFields, "Decks.MainDeck", "Decks.ExtraDeck", "Decks.SideDeck", "Decks.MainDeck.Card", "Decks.ExtraDeck.Card", "Decks.SideDeck.Card")
+	}
+
+	data, statusCode, err := service.GetUserByID(userID, preloadFields)
 	if err != nil {
 		return c.JSON(
 			statusCode,

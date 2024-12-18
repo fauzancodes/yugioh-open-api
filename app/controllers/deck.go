@@ -62,10 +62,19 @@ func CreateDeck(c echo.Context) error {
 }
 
 func GetDecks(c echo.Context) error {
+	withUser, _ := strconv.ParseBool(c.QueryParam("with_user"))
+	withCards, _ := strconv.ParseBool(c.QueryParam("with_cards"))
+
 	userID := utils.GetCurrentUserID(c)
 	log.Printf("Current user ID: %v", userID)
 
-	preloadFields := utils.GetBuildPreloadFields(c)
+	var preloadFields []string
+	if withUser {
+		preloadFields = append(preloadFields, "with_user")
+	}
+	if withCards {
+		preloadFields = append(preloadFields, "with_cards")
+	}
 
 	param := utils.PopulatePaging(c, "")
 	data, _, statusCode, err := service.GetDecks(userID, param, preloadFields)
@@ -84,11 +93,21 @@ func GetDecks(c echo.Context) error {
 }
 
 func GetDeckByID(c echo.Context) error {
+	withUser, _ := strconv.ParseBool(c.QueryParam("with_user"))
+	withCards, _ := strconv.ParseBool(c.QueryParam("with_cards"))
+
 	userID := utils.GetCurrentUserID(c)
 	log.Printf("Current user ID: %v", userID)
 
 	id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
-	preloadFields := utils.GetBuildPreloadFields(c)
+
+	var preloadFields []string
+	if withUser {
+		preloadFields = append(preloadFields, "User")
+	}
+	if withCards {
+		preloadFields = append(preloadFields, "Decks.MainDeck", "Decks.ExtraDeck", "Decks.SideDeck", "Decks.MainDeck.Card", "Decks.ExtraDeck.Card", "Decks.SideDeck.Card")
+	}
 
 	data, statusCode, err := service.GetDeckByID(uint(id), userID, preloadFields)
 	if err != nil {
@@ -191,7 +210,11 @@ func DeleteDeck(c echo.Context) error {
 }
 
 func GetPublicDecks(c echo.Context) error {
-	preloadFields := utils.GetBuildPreloadFields(c)
+	withCards, _ := strconv.ParseBool(c.QueryParam("with_cards"))
+	var preloadFields []string
+	if withCards {
+		preloadFields = append(preloadFields, "Decks.MainDeck", "Decks.ExtraDeck", "Decks.SideDeck", "Decks.MainDeck.Card", "Decks.ExtraDeck.Card", "Decks.SideDeck.Card")
+	}
 
 	param := utils.PopulatePaging(c, "")
 	param.Custom = "true"
