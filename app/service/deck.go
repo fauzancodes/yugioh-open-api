@@ -264,7 +264,7 @@ func GetDeckByID(id, userID uint, preloadFields []string) (data models.YOADeck, 
 	data, err = repository.GetDeckByID(id, preloadFields)
 	if err != nil {
 		err = errors.New("failed to get data: " + err.Error())
-		if err == gorm.ErrRecordNotFound {
+		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
 			statusCode = http.StatusNotFound
 			return
 		}
@@ -317,7 +317,7 @@ func GetDecks(userID uint, param utils.PagingRequest, preloadFields []string) (r
 	}, preloadFields)
 	if err != nil {
 		err = errors.New("failed to get data: " + err.Error())
-		if err == gorm.ErrRecordNotFound {
+		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
 			statusCode = http.StatusNotFound
 			return
 		}
@@ -336,7 +336,7 @@ func UpdateDeck(id, userID uint, request dto.DeckRequest) (response models.YOADe
 	data, err := repository.GetDeckByID(id, []string{})
 	if err != nil {
 		err = errors.New("failed to get data: " + err.Error())
-		if err == gorm.ErrRecordNotFound {
+		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
 			statusCode = http.StatusNotFound
 			return
 		}
@@ -513,7 +513,7 @@ func DeleteDeck(id, userID uint) (statusCode int, err error) {
 	data, err := repository.GetDeckByID(id, []string{})
 	if err != nil {
 		err = errors.New("failed to get data: " + err.Error())
-		if err == gorm.ErrRecordNotFound {
+		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
 			statusCode = http.StatusNotFound
 			return
 		}

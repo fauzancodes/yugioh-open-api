@@ -49,7 +49,7 @@ func GetCardByID(id uint) (data models.YOACard, statusCode int, err error) {
 	data, err = repository.GetCardByID(id)
 	if err != nil {
 		err = errors.New("failed to get data: " + err.Error())
-		if err == gorm.ErrRecordNotFound {
+		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
 			statusCode = http.StatusNotFound
 			return
 		}
@@ -148,7 +148,7 @@ func GetCards(cardType, race, archetype, attribute, cardsets, rarity, rarityCode
 	})
 	if err != nil {
 		err = errors.New("failed to get data: " + err.Error())
-		if err == gorm.ErrRecordNotFound {
+		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
 			statusCode = http.StatusNotFound
 			return
 		}
@@ -167,7 +167,7 @@ func UpdateCard(id uint, request dto.CardRequest) (response models.YOACard, stat
 	data, err := repository.GetCardByID(id)
 	if err != nil {
 		err = errors.New("failed to get data: " + err.Error())
-		if err == gorm.ErrRecordNotFound {
+		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
 			statusCode = http.StatusNotFound
 			return
 		}
@@ -234,7 +234,7 @@ func DeleteCard(id uint) (statusCode int, err error) {
 	data, err := repository.GetCardByID(id)
 	if err != nil {
 		err = errors.New("failed to get data: " + err.Error())
-		if err == gorm.ErrRecordNotFound {
+		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
 			statusCode = http.StatusNotFound
 			return
 		}
@@ -273,7 +273,7 @@ func GetCardUtility(field string) (responses []string, statusCode int, err error
 	responses, err = repository.GetCardUtility(field)
 	if err != nil {
 		err = errors.New("failed to get data: " + err.Error())
-		if err == gorm.ErrRecordNotFound {
+		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
 			statusCode = http.StatusNotFound
 			return
 		}

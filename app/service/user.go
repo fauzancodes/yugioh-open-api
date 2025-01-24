@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/fauzancodes/yugioh-open-api/app/dto"
 	"github.com/fauzancodes/yugioh-open-api/app/models"
@@ -34,7 +35,7 @@ func GetUserByID(id uint, preloadFields []string) (data models.YOAUser, statusCo
 	data, err = repository.GetUserByID(id, preloadFields)
 	if err != nil {
 		err = errors.New("failed to get data: " + err.Error())
-		if err == gorm.ErrRecordNotFound {
+		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
 			statusCode = http.StatusNotFound
 			return
 		}
@@ -73,7 +74,7 @@ func GetUsers(username string, param utils.PagingRequest, preloadFields []string
 	}, preloadFields)
 	if err != nil {
 		err = errors.New("failed to get data: " + err.Error())
-		if err == gorm.ErrRecordNotFound {
+		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
 			statusCode = http.StatusNotFound
 			return
 		}
@@ -92,7 +93,7 @@ func UpdateUser(id uint, request dto.UserRequest) (response models.YOAUser, stat
 	data, err := repository.GetUserByID(id, []string{})
 	if err != nil {
 		err = errors.New("failed to get data: " + err.Error())
-		if err == gorm.ErrRecordNotFound {
+		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
 			statusCode = http.StatusNotFound
 			return
 		}
@@ -123,7 +124,7 @@ func DeleteUser(id uint) (statusCode int, err error) {
 	data, err := repository.GetUserByID(id, []string{})
 	if err != nil {
 		err = errors.New("failed to get data: " + err.Error())
-		if err == gorm.ErrRecordNotFound {
+		if strings.Contains(err.Error(), gorm.ErrRecordNotFound.Error()) {
 			statusCode = http.StatusNotFound
 			return
 		}
