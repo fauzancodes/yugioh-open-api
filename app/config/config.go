@@ -18,6 +18,7 @@ type Config struct {
 	DatabaseHost                string
 	DatabasePort                string
 	DatabaseName                string
+	DatabaseSchema              string
 	EnableDatabaseAutomigration bool
 	EnableAPIKey                bool
 	SpecialApiKey               string
@@ -42,6 +43,7 @@ func LoadConfig() (config *Config) {
 	databaseHost := os.Getenv("DATABASE_HOST")
 	databasePort := os.Getenv("DATABASE_PORT")
 	databaseName := os.Getenv("DATABASE_NAME")
+	databaseSchema := os.Getenv("DATABASE_SCHEMA")
 	enableDatabaseAutomigration, _ := strconv.ParseBool(os.Getenv("ENABLE_DATABASE_AUTOMIGRATION"))
 	enableApiKey, _ := strconv.ParseBool(os.Getenv("ENABLE_API_KEY"))
 	specialApiKey := os.Getenv("SPECIAL_API_KEY")
@@ -65,6 +67,7 @@ func LoadConfig() (config *Config) {
 		DatabaseHost:                databaseHost,
 		DatabasePort:                databasePort,
 		DatabaseName:                databaseName,
+		DatabaseSchema:              databaseSchema,
 		EnableDatabaseAutomigration: enableDatabaseAutomigration,
 		EnableAPIKey:                enableApiKey,
 		SpecialApiKey:               specialApiKey,

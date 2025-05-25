@@ -8,23 +8,24 @@ import (
 	"github.com/fauzancodes/yugioh-open-api/app/models"
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
+	"slices"
 )
 
 type CardRequest struct {
-	ID          uint   `json:"id"`
-	Name        string `json:"name"`
-	Type        string `json:"type"`
-	Description string `json:"description"`
-	Race        string `json:"race"`
-	Archetype   string `json:"archetype"`
-	Attack      int    `json:"attack"`
-	Defense     int    `json:"defense"`
-	Level       int    `json:"level"`
-	Attribute   string `json:"attribute"`
-	CardSets    string `json:"card_sets"`
-	ImageUrl    string `json:"image_url"`
-	Rarity      string `json:"rarity"`
-	RarityCode  string `json:"rarity_code"`
+	ID          uint      `json:"id"`
+	Name        string    `json:"name"`
+	Type        string    `json:"type"`
+	Description string    `json:"description"`
+	Race        string    `json:"race"`
+	Archetype   string    `json:"archetype"`
+	Attack      int       `json:"attack"`
+	Defense     int       `json:"defense"`
+	Level       int       `json:"level"`
+	Attribute   string    `json:"attribute"`
+	CardSets    []CardSet `json:"card_sets"`
+	ImageUrl    string    `json:"image_url"`
+	// Rarity      string `json:"rarity"`
+	// RarityCode  string `json:"rarity_code"`
 }
 
 func (request CardRequest) Validate() error {
@@ -35,27 +36,23 @@ func (request CardRequest) Validate() error {
 	if err != nil {
 		return err
 	}
-	pass = false
-	for _, item := range cardType {
-		if request.Type == item {
-			pass = true
-			break
-		}
-	}
+	pass = slices.Contains(cardType, request.Type)
 	if !pass {
 		return errors.New("accepted types: " + strings.Join(cardType, ", "))
 	}
 
 	var rarity []string
-	err = config.DB.Raw("SELECT DISTINCT rarity FROM " + models.YOACard{}.TableName() + " WHERE rarity != ''").Scan(&rarity).Error
+	err = config.DB.Raw("SELECT DISTINCT set_rarity FROM " + models.YOACardSet{}.TableName() + " WHERE set_rarity != ''").Scan(&rarity).Error
 	if err != nil {
 		return err
 	}
 	pass = false
 	for _, item := range rarity {
-		if request.Rarity == item {
-			pass = true
-			break
+		for _, set := range request.CardSets {
+			if set.SetRarity == item {
+				pass = true
+				break
+			}
 		}
 	}
 	if !pass {
@@ -63,19 +60,39 @@ func (request CardRequest) Validate() error {
 	}
 
 	var rarityCode []string
-	err = config.DB.Raw("SELECT DISTINCT rarity_code FROM " + models.YOACard{}.TableName() + " WHERE rarity_code != ''").Scan(&rarityCode).Error
+	err = config.DB.Raw("SELECT DISTINCT set_rarity_code FROM " + models.YOACardSet{}.TableName() + " WHERE set_rarity_code != ''").Scan(&rarityCode).Error
 	if err != nil {
 		return err
 	}
 	pass = false
 	for _, item := range rarityCode {
-		if request.RarityCode == item {
-			pass = true
-			break
+		for _, set := range request.CardSets {
+			if set.SetRarityCode == item {
+				pass = true
+				break
+			}
 		}
 	}
 	if !pass {
 		return errors.New("accepted rarity codes: " + strings.Join(rarityCode, ", "))
+	}
+
+	var cardsets []string
+	err = config.DB.Raw("SELECT DISTINCT set_name FROM " + models.YOACardSet{}.TableName() + " WHERE set_name != ''").Scan(&cardsets).Error
+	if err != nil {
+		return err
+	}
+	pass = false
+	for _, item := range rarityCode {
+		for _, set := range request.CardSets {
+			if set.SetName == item {
+				pass = true
+				break
+			}
+		}
+	}
+	if !pass {
+		return errors.New("accepted set names: " + strings.Join(rarityCode, ", "))
 	}
 
 	var race []string
@@ -83,13 +100,7 @@ func (request CardRequest) Validate() error {
 	if err != nil {
 		return err
 	}
-	pass = false
-	for _, item := range race {
-		if request.Race == item {
-			pass = true
-			break
-		}
-	}
+	pass = slices.Contains(race, request.Race)
 	if !pass {
 		return errors.New("accepted races: " + strings.Join(race, ", "))
 	}
@@ -99,13 +110,7 @@ func (request CardRequest) Validate() error {
 	if err != nil {
 		return err
 	}
-	pass = false
-	for _, item := range archetype {
-		if request.Archetype == item {
-			pass = true
-			break
-		}
-	}
+	pass = slices.Contains(archetype, request.Archetype)
 	if !pass {
 		return errors.New("accepted archetypes: " + strings.Join(archetype, ", "))
 	}
@@ -115,13 +120,7 @@ func (request CardRequest) Validate() error {
 	if err != nil {
 		return err
 	}
-	pass = false
-	for _, item := range attribute {
-		if request.Attribute == item {
-			pass = true
-			break
-		}
-	}
+	pass = slices.Contains(attribute, request.Attribute)
 	if !pass {
 		return errors.New("accepted attributes: " + strings.Join(attribute, ", "))
 	}

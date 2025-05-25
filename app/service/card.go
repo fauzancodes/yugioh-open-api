@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"slices"
+
 	"github.com/fauzancodes/yugioh-open-api/app/dto"
 	"github.com/fauzancodes/yugioh-open-api/app/models"
 	"github.com/fauzancodes/yugioh-open-api/app/pkg/upload"
@@ -17,6 +19,8 @@ import (
 )
 
 func CreateCard(request dto.CardRequest) (response models.YOACard, statusCode int, err error) {
+	// sets, _ := json.Marshal(request.CardSets)
+
 	data := models.YOACard{
 		CustomGormModel: models.CustomGormModel{ID: request.ID},
 		Name:            request.Name,
@@ -28,10 +32,10 @@ func CreateCard(request dto.CardRequest) (response models.YOACard, statusCode in
 		Defense:         request.Defense,
 		Level:           request.Level,
 		Attribute:       request.Attribute,
-		CardSets:        request.CardSets,
-		ImageUrl:        request.ImageUrl,
-		Rarity:          request.Rarity,
-		RarityCode:      request.RarityCode,
+		// CardSets:        string(sets),
+		ImageUrl: request.ImageUrl,
+		// Rarity:          request.Rarity,
+		// RarityCode:      request.RarityCode,
 	}
 
 	response, err = repository.CreateCard(data)
@@ -39,6 +43,26 @@ func CreateCard(request dto.CardRequest) (response models.YOACard, statusCode in
 		err = errors.New("failed to create data: " + err.Error())
 		statusCode = http.StatusInternalServerError
 		return
+	}
+
+	for _, set := range request.CardSets {
+		setData := models.YOACardSet{
+			SetName:       set.SetName,
+			SetCode:       set.SetCode,
+			SetRarity:     set.SetRarity,
+			SetRarityCode: set.SetRarityCode,
+			CardID:        response.ID,
+		}
+
+		var setResponse models.YOACardSet
+		setResponse, err = repository.CreateCardSet(setData)
+		if err != nil {
+			err = errors.New("failed to create cardset data: " + err.Error())
+			statusCode = http.StatusInternalServerError
+			return
+		}
+
+		response.CardSets = append(response.CardSets, setResponse)
 	}
 
 	statusCode = http.StatusCreated
@@ -58,41 +82,121 @@ func GetCardByID(id uint) (data models.YOACard, statusCode int, err error) {
 		return
 	}
 
+	existingCardSets, _ := repository.GetCardSetsByCardID(data.ID)
+	data.CardSets = append(data.CardSets, existingCardSets...)
+
 	statusCode = http.StatusOK
 	return
 }
 
-func GetCards(cardType, race, archetype, attribute, cardsets, rarity, rarityCode string, attack, attackMarginTop, attackMarginBottom, defense, defenseMarginTop, defenseMarginBottom, level, levelMarginTop, levelMarginBottom int, param utils.PagingRequest) (response utils.PagingResponse, data []models.YOACard, statusCode int, err error) {
-	baseFilter := "deleted_at IS NULL"
+func GetCards(cardType, race, archetype, attribute, cardsets, rarity, rarityCode []string, level []int, attack, attackMarginTop, attackMarginBottom, defense, defenseMarginTop, defenseMarginBottom, levelMarginTop, levelMarginBottom int, param utils.PagingRequest) (response utils.PagingResponse, data []models.YOACard, statusCode int, err error) {
+	baseFilter := `
+		deleted_at IS NULL AND 
+		race NOT IN(
+			'Thelonious Vi',
+			'Pegasus',
+			'Jesse Anderso',
+			'Tania',
+			'Mako',
+			'Odion',
+			'Dr. Vellian C',
+			'Tyranno Hassl',
+			'Rex',
+			'Yugi',
+			'Mai',
+			'Camula',
+			'Alexis Rhodes',
+			'Syrus Truesda',
+			'Axel Brodie',
+			'Aster Phoenix',
+			'Chumley Huffi',
+			'Kagemaru',
+			'Bastion Misaw',
+			'Lumis Umbra',
+			'Creator God',
+			'Joey',
+			'Ishizu',
+			'Bonz',
+			'Don Zaloog',
+			'The Supreme K',
+			'Abidos the Th',
+			'Lumis and Umb',
+			'Amnael',
+			'David',
+			'Weevil',
+			'Adrian Gecko',
+			'Yubel',
+			'Joey Wheeler',
+			'Chazz Princet',
+			'Titan',
+			'Christine',
+			'Espa Roba',
+			'Nightshroud',
+			'Keith',
+			'Tea Gardner',
+			'Emma',
+			'Yami Bakura',
+			'Seto Kaiba',
+			'Paradox Broth',
+			'Kaiba',
+			'Mai Valentine',
+			'Jaden Yuki',
+			'Yami Marik',
+			'Arkana',
+			'Zane Truesdal',
+			'Andrew',
+			'Yami Yugi',
+			'Ishizu Ishtar'
+		)
+	`
+
 	filter := baseFilter
 	var filterValues []any
 
-	if cardType != "" {
-		filter += " AND type = ?"
+	if len(cardType) > 0 {
+		filter += " AND type IN(?)"
 		filterValues = append(filterValues, cardType)
 	}
-	if race != "" {
-		filter += " AND race = ?"
+	if len(race) > 0 {
+		filter += " AND race IN(?)"
 		filterValues = append(filterValues, race)
 	}
-	if archetype != "" {
-		filter += " AND archetype = ?"
+	if len(archetype) > 0 {
+		filter += " AND archetype IN(?)"
 		filterValues = append(filterValues, archetype)
 	}
-	if attribute != "" {
-		filter += " AND attribute = ?"
+	if len(attribute) > 0 {
+		filter += " AND attribute IN(?)"
 		filterValues = append(filterValues, attribute)
 	}
-	if cardsets != "" {
-		filter += " AND card_sets ILIKE ?"
-		filterValues = append(filterValues, fmt.Sprintf("%%%s%%", cardsets))
+	if len(cardsets) > 0 {
+		filter += `
+			AND id IN(
+				SELECT card_id FROM ` + models.YOACardSet{}.TableName() + `
+				WHERE deleted_at IS NULL AND
+				set_name IN(?)
+			)
+		`
+		filterValues = append(filterValues, cardsets)
 	}
-	if rarity != "" {
-		filter += " AND rarity = ?"
+	if len(rarity) > 0 {
+		filter += `
+			AND id IN(
+				SELECT card_id FROM ` + models.YOACardSet{}.TableName() + `
+				WHERE deleted_at IS NULL AND
+				set_rarity IN(?)
+			)
+		`
 		filterValues = append(filterValues, rarity)
 	}
-	if rarityCode != "" {
-		filter += " AND rarity_code = ?"
+	if len(rarityCode) > 0 {
+		filter += `
+			AND id IN(
+				SELECT card_id FROM ` + models.YOACardSet{}.TableName() + `
+				WHERE deleted_at IS NULL AND
+				set_rarity_code IN(?)
+			)
+		`
 		filterValues = append(filterValues, rarityCode)
 	}
 	if attack > 0 {
@@ -119,8 +223,8 @@ func GetCards(cardType, race, archetype, attribute, cardsets, rarity, rarityCode
 		filter += " AND defense >= ?"
 		filterValues = append(filterValues, defenseMarginBottom)
 	}
-	if level > 0 {
-		filter += " AND level = ?"
+	if len(level) > 0 {
+		filter += " AND level IN(?)"
 		filterValues = append(filterValues, level)
 	}
 	if levelMarginTop > 0 {
@@ -155,6 +259,11 @@ func GetCards(cardType, race, archetype, attribute, cardsets, rarity, rarityCode
 
 		statusCode = http.StatusInternalServerError
 		return
+	}
+
+	for i, item := range data {
+		existingCardSets, _ := repository.GetCardSetsByCardID(item.ID)
+		data[i].CardSets = append(data[i].CardSets, existingCardSets...)
 	}
 
 	response = utils.PopulateResPaging(&param, data, total, totalFiltered)
@@ -206,18 +315,44 @@ func UpdateCard(id uint, request dto.CardRequest) (response models.YOACard, stat
 	if request.Attribute != "" {
 		data.Attribute = request.Attribute
 	}
-	if request.CardSets != "" {
-		data.CardSets = request.CardSets
+	if len(request.CardSets) > 0 {
+		// sets, _ := json.Marshal(request.CardSets)
+		// data.CardSets = string(sets)
+
+		existingCardSets, _ := repository.GetCardSetsByCardID(data.ID)
+		for _, existingSet := range existingCardSets {
+			repository.DeleteCardSet(existingSet)
+		}
+
+		for _, set := range request.CardSets {
+			setData := models.YOACardSet{
+				SetName:       set.SetName,
+				SetCode:       set.SetCode,
+				SetRarity:     set.SetRarity,
+				SetRarityCode: set.SetRarityCode,
+				CardID:        response.ID,
+			}
+
+			var setResponse models.YOACardSet
+			setResponse, err = repository.CreateCardSet(setData)
+			if err != nil {
+				err = errors.New("failed to create cardset data: " + err.Error())
+				statusCode = http.StatusInternalServerError
+				return
+			}
+
+			response.CardSets = append(response.CardSets, setResponse)
+		}
 	}
 	if request.ImageUrl != "" {
 		data.ImageUrl = request.ImageUrl
 	}
-	if request.Rarity != "" {
-		data.Rarity = request.Rarity
-	}
-	if request.RarityCode != "" {
-		data.RarityCode = request.RarityCode
-	}
+	// if request.Rarity != "" {
+	// 	data.Rarity = request.Rarity
+	// }
+	// if request.RarityCode != "" {
+	// 	data.RarityCode = request.RarityCode
+	// }
 
 	response, err = repository.UpdateCard(data)
 	if err != nil {
@@ -250,6 +385,11 @@ func DeleteCard(id uint) (statusCode int, err error) {
 		return
 	}
 
+	existingCardSets, _ := repository.GetCardSetsByCardID(data.ID)
+	for _, existingSet := range existingCardSets {
+		repository.DeleteCardSet(existingSet)
+	}
+
 	statusCode = http.StatusOK
 	return
 }
@@ -257,11 +397,8 @@ func DeleteCard(id uint) (statusCode int, err error) {
 func GetCardUtility(field string) (responses []string, statusCode int, err error) {
 	acceptedField := []string{"type", "race", "archetype", "level", "card_sets", "rarity", "attribute", "rarity_code"}
 	var accepted bool
-	for _, item := range acceptedField {
-		if item == field {
-			accepted = true
-			break
-		}
+	if slices.Contains(acceptedField, field) {
+		accepted = true
 	}
 	if !accepted {
 		statusCode = http.StatusBadRequest

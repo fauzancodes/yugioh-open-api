@@ -17,9 +17,10 @@ func Database() *gorm.DB {
 	password := LoadConfig().DatabasePassword
 	name := LoadConfig().DatabaseName
 	port := LoadConfig().DatabasePort
+	schema := LoadConfig().DatabaseSchema
 
 	var err error
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s", host, user, password, name, port)
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s search_path=%s", host, user, password, name, port, schema)
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
@@ -43,6 +44,7 @@ func RunAutoMigration() {
 		&models.YOAMainDeck{},
 		&models.YOAExtraDeck{},
 		&models.YOASideDeck{},
+		&models.YOACardSet{},
 	)
 	if err != nil {
 		log.Fatalf("Failed to migrate database: %v", err)
