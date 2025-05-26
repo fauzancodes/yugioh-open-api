@@ -49,6 +49,15 @@ func DownloadImagesWithRateLimit(urls []string, rateLimit int) {
 			imageName := urlSplited[len(urlSplited)-1]
 			filepath := fmt.Sprintf("images/%v", imageName) // Set file path with index to avoid overwriting
 
+			// ✅ Check if file already exists
+			if _, err := os.Stat(filepath); err == nil {
+				fmt.Printf("File already exists, skipping: %s\n", filepath)
+				return
+			} else if !os.IsNotExist(err) {
+				fmt.Printf("Error checking file: %v\n", err)
+				return
+			}
+
 			fmt.Printf("Starting download for: %s\n", url)
 			err := DownloadImage(url, filepath)
 			if err != nil {
@@ -66,6 +75,7 @@ func DownloadImagesWithRateLimit(urls []string, rateLimit int) {
 func main() {
 	cards, err := utils.LoadCardJSON()
 	if err != nil {
+		fmt.Printf("Failed to load cards: %v\n", err)
 		return
 	}
 
@@ -76,6 +86,14 @@ func main() {
 	}
 
 	fmt.Println("Starting batch download with rate limit...")
+
+	// Ensure images directory exists
+	if _, err := os.Stat("images"); os.IsNotExist(err) {
+		if err := os.Mkdir("images", os.ModePerm); err != nil {
+			fmt.Printf("Failed to create images directory: %v\n", err)
+			return
+		}
+	}
 
 	// Download images with a rate limit of 15 per second
 	DownloadImagesWithRateLimit(urls, 15)

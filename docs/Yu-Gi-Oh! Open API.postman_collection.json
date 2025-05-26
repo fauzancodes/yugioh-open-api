@@ -241,7 +241,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/v1/card?card_type=&race=&archetype&attribute=&cardsets&rarity&rarity_code=&attack=&attack_margin_top&attack_margin_bottom=&defense&defense_margin_top&defense_margin_bottom=&level=&level_margin_top&level_margin_bottom&page&search=eldlich&limit=20&offset&order&sort",
+							"raw": "{{BASE_URL}}/v1/card?card_type=&race=Dragon, Zombie&archetype&attribute=&cardsets&rarity&rarity_code=&attack=&attack_margin_top&attack_margin_bottom=&defense&defense_margin_top&defense_margin_bottom=&level=10&level_margin_top&level_margin_bottom&page=&search=&limit=10&offset&order&sort",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -253,32 +253,32 @@
 								{
 									"key": "card_type",
 									"value": "",
-									"description": "Card Type"
+									"description": "Card Type, accept multiple values, separate with commas, values ​​can be obtained from the /v1/card/utility endpoint"
 								},
 								{
 									"key": "race",
-									"value": "",
-									"description": "Race"
+									"value": "Dragon, Zombie",
+									"description": "Race, accept multiple values, separate with commas, values ​​can be obtained from the /v1/card/utility endpoint"
 								},
 								{
 									"key": "archetype",
 									"value": null,
-									"description": "Archetype"
+									"description": "Archetype, accept multiple values, separate with commas, values ​​can be obtained from the /v1/card/utility endpoint"
 								},
 								{
 									"key": "attribute",
 									"value": "",
-									"description": "Attribute"
+									"description": "Attribute, accept multiple values, separate with commas, values ​​can be obtained from the /v1/card/utility endpoint"
 								},
 								{
 									"key": "cardsets",
 									"value": null,
-									"description": "Card Sets"
+									"description": "Card Sets, accept multiple values, separate with commas, values ​​can be obtained from the /v1/card/utility endpoint"
 								},
 								{
 									"key": "rarity",
 									"value": null,
-									"description": "Rarity"
+									"description": "Rarity, accept multiple values, separate with commas, values ​​can be obtained from the /v1/card/utility endpoint"
 								},
 								{
 									"key": "rarity_code",
@@ -317,8 +317,8 @@
 								},
 								{
 									"key": "level",
-									"value": "",
-									"description": "Level"
+									"value": "10",
+									"description": "Level, accept multiple values, separate with commas, values ​​can be obtained from the /v1/card/utility endpoint"
 								},
 								{
 									"key": "level_margin_top",
@@ -332,17 +332,17 @@
 								},
 								{
 									"key": "page",
-									"value": null,
+									"value": "",
 									"description": "Page, default: 1"
 								},
 								{
 									"key": "search",
-									"value": "eldlich",
+									"value": "",
 									"description": "Search by name and description"
 								},
 								{
 									"key": "limit",
-									"value": "20",
+									"value": "10",
 									"description": "Number of data returned, default: 10"
 								},
 								{
@@ -402,7 +402,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/v1/card/utility?field=type",
+							"raw": "{{BASE_URL}}/v1/card/utility?field=race",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -414,7 +414,7 @@
 							"query": [
 								{
 									"key": "field",
-									"value": "type",
+									"value": "race",
 									"description": "Accepted Fields: type, race, archetype, level, card_sets, rarity, attribute, rarity_code"
 								}
 							]

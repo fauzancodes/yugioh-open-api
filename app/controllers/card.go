@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/fauzancodes/yugioh-open-api/app/dto"
 	"github.com/fauzancodes/yugioh-open-api/app/service"
@@ -72,25 +73,69 @@ func CreateCard(c echo.Context) error {
 }
 
 func GetCards(c echo.Context) error {
-	cardType := c.QueryParam("card_type")
-	race := c.QueryParam("race")
-	archetype := c.QueryParam("archetype")
-	attribute := c.QueryParam("attribute")
-	cardsets := c.QueryParam("cardsets")
-	rarity := c.QueryParam("rarity")
-	rarityCode := c.QueryParam("rarity_code")
+	var cardType []string
+	cardTypeParam := c.QueryParam("card_type")
+	if cardTypeParam != "" {
+		cardType = strings.Split(strings.ReplaceAll(cardTypeParam, ", ", ","), ",")
+	}
+
+	var race []string
+	raceParam := c.QueryParam("race")
+	if raceParam != "" {
+		race = strings.Split(strings.ReplaceAll(raceParam, ", ", ","), ",")
+	}
+
+	var archetype []string
+	archetypeParam := c.QueryParam("archetype")
+	if archetypeParam != "" {
+		archetype = strings.Split(strings.ReplaceAll(archetypeParam, ", ", ","), ",")
+	}
+
+	var attribute []string
+	attributeParam := c.QueryParam("attribute")
+	if attributeParam != "" {
+		attribute = strings.Split(strings.ReplaceAll(attributeParam, ", ", ","), ",")
+	}
+
+	var cardsets []string
+	cardsetsParam := c.QueryParam("card_type")
+	if cardsetsParam != "" {
+		cardsets = strings.Split(strings.ReplaceAll(cardsetsParam, ", ", ","), ",")
+	}
+
+	var rarity []string
+	rarityParam := c.QueryParam("rarity")
+	if rarityParam != "" {
+		rarity = strings.Split(strings.ReplaceAll(rarityParam, ", ", ","), ",")
+	}
+
+	var rarityCode []string
+	rarityCodeParam := c.QueryParam("rarity_code")
+	if rarityCodeParam != "" {
+		rarityCode = strings.Split(strings.ReplaceAll(rarityCodeParam, ", ", ","), ",")
+	}
+
 	attack, _ := strconv.Atoi(c.QueryParam("attack"))
 	attackMarginTop, _ := strconv.Atoi(c.QueryParam("attack_margin_top"))
 	attackMarginBottom, _ := strconv.Atoi(c.QueryParam("attack_margin_bottom"))
 	defense, _ := strconv.Atoi(c.QueryParam("defense"))
 	defenseMarginTop, _ := strconv.Atoi(c.QueryParam("defense_margin_top"))
 	defenseMarginBottom, _ := strconv.Atoi(c.QueryParam("defense_margin_bottom"))
-	level, _ := strconv.Atoi(c.QueryParam("level"))
 	levelMarginTop, _ := strconv.Atoi(c.QueryParam("level_margin_top"))
 	levelMarginBottom, _ := strconv.Atoi(c.QueryParam("level_margin_bottom"))
 
+	var level []int
+	levelParam := c.QueryParam("level")
+	if levelParam != "" {
+		levelParamManipulated := strings.Split(strings.ReplaceAll(levelParam, ", ", ","), ",")
+		for _, item := range levelParamManipulated {
+			levelInt, _ := strconv.Atoi(item)
+			level = append(level, levelInt)
+		}
+	}
+
 	param := utils.PopulatePaging(c, "")
-	data, _, statusCode, err := service.GetCards(cardType, race, archetype, attribute, cardsets, rarity, rarityCode, attack, attackMarginTop, attackMarginBottom, defense, defenseMarginTop, defenseMarginBottom, level, levelMarginTop, levelMarginBottom, param)
+	data, _, statusCode, err := service.GetCards(cardType, race, archetype, attribute, cardsets, rarity, rarityCode, level, attack, attackMarginTop, attackMarginBottom, defense, defenseMarginTop, defenseMarginBottom, levelMarginTop, levelMarginBottom, param)
 	if err != nil {
 		return c.JSON(
 			statusCode,
