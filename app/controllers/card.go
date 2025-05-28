@@ -98,7 +98,7 @@ func GetCards(c echo.Context) error {
 	}
 
 	var cardsets []string
-	cardsetsParam := c.QueryParam("card_type")
+	cardsetsParam := c.QueryParam("cardsets")
 	if cardsetsParam != "" {
 		cardsets = strings.Split(strings.ReplaceAll(cardsetsParam, ", ", ","), ",")
 	}
