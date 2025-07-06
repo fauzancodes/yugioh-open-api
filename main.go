@@ -1,4 +1,3 @@
-// package handler //for vercel
 package main
 
 import (
